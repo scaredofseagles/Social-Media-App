@@ -1,30 +1,15 @@
-import { Nav, Navbar } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 
 export default function NavBar() {
   return (
-    <Nav
-      activeKey="/home"
-      onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
-    >
-      <Nav.Item>
-        <Nav.Link href="/home">Active</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="link-1">Link</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="link-2">Link</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="disabled" disabled>
-          Disabled
-        </Nav.Link>
-      </Nav.Item>
+    <Navbar className="yellow">
+      <Navbar.Brand href="#home">SUBTweets Inc</Navbar.Brand>
+      <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
         <Navbar.Text>
           Signed in as: <a href="#login">Mark Otto</a>
         </Navbar.Text>
       </Navbar.Collapse>
-    </Nav>
+    </Navbar>
   );
 }

@@ -1,6 +1,6 @@
 import { Container } from 'react-bootstrap'
 import NewText from './components/NewText'
-import TextCard from './components/TextCard'
+import AllPosts from './views/AllPosts'
 import Navbar from './components/NavBar'
 import Footer from './components/Footer'
 
@@ -10,7 +10,7 @@ function App() {
       <Navbar/>
       <Container>
         <NewText/>
-        <TextCard />
+        <AllPosts/>
       </Container>
       <Footer/>
     </>

@@ -1,0 +1,21 @@
+body {
+    background-color: rgba(245, 245, 245, 0.897);
+    border: 7px solid #FFBC42
+}
+
+a {
+    text-decoration: none;
+    color: inherit !important;
+}
+
+li {
+    list-style-type: none;
+}
+
+.yellow{
+    background-color: #FFBC42;
+}
+
+.lightblue{
+    background-color: #0496FF
+}

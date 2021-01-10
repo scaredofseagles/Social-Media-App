@@ -1,15 +1,18 @@
 import { Form, Button } from 'react-bootstrap'
+import { Divider } from '@material-ui/core'
 
 export default function NewText(){
     return (
         <>
-            <Form>
+            <Form className="mt-5">
                 <Form.Group>
                     <Form.Control as="textarea" rows={4} placeholder="How do you feel?"/>
                 </Form.Group>
                 <IconBar />
                 <Button>Send Message</Button>
             </Form>
+            <br/>
+            <Divider variant="middle" />
         </>
     )
 }
