@@ -19,3 +19,7 @@ li {
 .lightblue{
     background-color: #0496FF
 }
+
+.fas:hover{
+    background-color: lightgrey;
+}
