@@ -1,9 +1,16 @@
-DROP DATABASE IF EXISTS subtwat;
-CREATE DATABASE subtwat;
+DROP DATABASE IF EXISTS subtweet;
+CREATE DATABASE subtweet;
 
 CREATE TABLE users {
-    id,
-    user_name,
-    email,
-    created_at
-}
+    id INT PRIMARY KEY NOT NULL,
+    screen_name VARCHAR(30) NOT NULL,
+    email VARCHAR(30) NOT NULL,
+    profile_image VARCHAR(254) NOT NULL,
+    created_at DEFAULT CURRENT_TIMESTAMP,
+    updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+};
+
+CREATE TABLE tweets {
+    id INT PRIMARY KEY NOT NULL,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE
+};
