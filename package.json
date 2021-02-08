@@ -10,7 +10,12 @@
     "client": "cd client && npm run start",
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "migrate:make": "knex migrate:make migrations",
+    "migrate": "knex migrate:latest",
+    "unmigrate": "knex migrate:rollback",
+    "migrate:down": "knex migrate:down",
+    "mysql": "/usr/local/mysql/bin/mysql -u nodeuser -p"
   },
   "repository": {
     "type": "git",
@@ -22,7 +27,7 @@
     "concurrently": "^5.3.0",
     "nodemon": "^1.18.7",
     "knex": "^0.21.17",
-    "sequelize-cli": "^6.2.0"
+    "mysql": "^2.18.1"
   },
   "bugs": {
     "url": "https://github.com/scaredofseagles/Social-Media-App/issues"
@@ -31,7 +36,6 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mysql2": "^2.2.5",
     "path": "^0.12.7"
   }
 }

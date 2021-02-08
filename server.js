@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 const app = express()
-//const routes = require('./routes')
+const routes = require('./routes')
 
 const PORT = process.env.PORT || 8080
 
@@ -12,11 +12,7 @@ if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
 }
 
-app.get('/', (req, res) => {
-    res.send("Hello")
-})
-
-//app.use(routes)
+routes(app)
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "./client/build/index.html"));
