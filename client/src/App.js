@@ -22,7 +22,7 @@ function App() {
               <NewText/>
               <AllPosts/>
             </Route>
-            <Route path="/:userid">
+            <Route path="/users/:userid">
               <UserProfile />
             </Route>
             <Route path="/admin">
