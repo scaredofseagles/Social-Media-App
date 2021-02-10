@@ -1,4 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
+import moment from 'moment'
+import momentDurationFormatSetup from 'moment-duration-format'
 import {
   Card,
   CardActions,
@@ -8,6 +10,7 @@ import {
   CardMedia,
   Grid,
 } from "@material-ui/core";
+
 
 const useStyles = makeStyles({
     root: {
@@ -30,10 +33,10 @@ const useStyles = makeStyles({
     },
 })
 
-export default function TextCard(){
+export default function TextCard(props){
     const classes = useStyles()
     const bull = <span className={classes.bullet}>.</span>
-
+    console.log({props})
     return(
         <Card className={classes.root} variant="outlined" style={{marginTop: "20px"}}>
             <Grid container >
@@ -43,17 +46,17 @@ export default function TextCard(){
                     alt="avatar"
                     height="100"
                     className={classes.cover}
-                    image="https://robohash.org/65.60.11.210.png"
+                    image={props.data?.profile_image}
                     />
                 </Grid>
             
                 <Grid item xs={8}>
                     <CardContent>
                         <Typography className={classes.pos} color="textSecondary" gutterBottom>
-                            username {bull} 2 days ago
+                            {props.data?.screen_name} {bull} {moment.duration(props.data?.created_at, "days").format("d") === "0" ? "Today" : moment.duration(props.data?.created_at, "days").format( "d [days ago]") }
                         </Typography>
                         <Typography variant="body2" component="p">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ultricies hendrerit sapien, a euismod dolor aliquet eget. Nunc magna diam, tincidunt vitae iaculis dignissim, sodales et ante.
+                            { props.data?.tweet }
                         </Typography>
                         <br />
                         <Typography className={classes.title} color="textSecondary">

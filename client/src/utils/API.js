@@ -9,6 +9,9 @@ const API = {
     },
     addPost: async (data) => {
         return axios.post("/api/posts", data)
+    },
+    getPosts: async () => {
+        return axios.get("/api/posts")
     }
 }
 
