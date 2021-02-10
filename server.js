@@ -1,11 +1,13 @@
 const express = require('express')
 const path = require('path')
+const cors = require("cors");
 const app = express()
 const routes = require('./routes')
 
 const PORT = process.env.PORT || 8080
 
 app.use(express.urlencoded({ extended: true }))
+app.use(cors());
 app.use(express.json())
 
 if (process.env.NODE_ENV === "production") {
