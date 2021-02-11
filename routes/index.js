@@ -5,8 +5,8 @@ function Router(app){
 
     app.get("/api/users", async (req, res) => {                
         try { 
-            const response = await pool.query("SELECT * FROM users");
-            res.json({success: true, msg: "Retrieved Users Successfully", data: response.rows});
+            const result = await pool.query("SELECT * FROM users");
+            res.json({success: true, msg: "Retrieved Users Successfully", response: result.rows});
         } catch (error) {
             res.json({success: false, msg: "Failed to Retrieve users", response: error})
             throw error;
@@ -22,7 +22,7 @@ function Router(app){
     app.get("/api/posts", async (req, res) => {
         try { 
             const result = await pool.query(`
-                SELECT user_id, screen_name, profile_image, tweets.created_at, tweet 
+                SELECT user_id, screen_name, profile_image, tweets.created_at, tweet, tags 
                 FROM tweets 
                     LEFT JOIN users ON user_id = users.id
                 WHERE active = true
@@ -34,7 +34,16 @@ function Router(app){
         }
     })
 
-    app.post("/api/users", async (req, res) => {
+    async function check4Duplicates(req, res, next) {
+        const { screen_name, email } = req.body;
+
+        const newQuery = await pool.query(`SELECT * FROM users WHERE screen_name = '${screen_name}' OR email = '${email}'`);
+
+        if (newQuery.rows.length === 0) next();
+        else return res.send({ success: false, msg: "User already exists" });
+    }
+
+    app.post("/api/users", check4Duplicates, async (req, res) => {
         const { screen_name, email, profile_image } = req.body;
 
         (async () => {
@@ -46,11 +55,12 @@ function Router(app){
                 const newUser = `
                 INSERT INTO users (email, screen_name, profile_image, active) 
                 VALUES ('${email}', '${screen_name}', '${profile_image}', true )
+                RETURNING *
                 `
 
-                await client.query(newUser)
+                let result = await client.query(newUser)
 
-                res.send({success: true, msg: "Used Added Successfully"})
+                res.send({success: true, msg: "Used Added Successfully", response: result.rows[0]})
                 await client.query("COMMIT")
 
             } catch (err) {
@@ -63,7 +73,7 @@ function Router(app){
     })
 
     app.post("/api/posts", async (req, res) => {
-        const { user_id, tweet } = req.body;
+        const { user_id, tweet, tags } = req.body;
 
         (async () => {
             const client = await pool.connect();
@@ -72,7 +82,8 @@ function Router(app){
                 await client.query("BEGIN")
 
                 const newPost = `
-                    INSERT INTO tweets (user_id, tweet) VALUES ('${user_id}', '${tweet}')
+                    INSERT INTO tweets (user_id, tweet, tags) VALUES ('${user_id}', '${tweet}', 
+                    ARRAY[${tags.map(item => `'${item.trim()}'`)}])
                 `
                 await client.query(newPost)
 

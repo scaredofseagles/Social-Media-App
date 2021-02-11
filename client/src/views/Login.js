@@ -27,19 +27,20 @@ export default function Login() {
 
     async function handleFormSubmit(event) {
         event.preventDefault();
-
         let result = await API.getUsers()
+        debugger
         try {
             let validUser = result.data.response.filter(user => user.screen_name === screen_nameRef.current.value)
             setLoading(true)
-
+            debugger
             if (validUser.length >= 1) {
+                localStorage.setItem('currentUser', JSON.stringify(validUser[0]))
                 history.push("/home")
             } else {
                 setError('User does not exist')
             }
         } catch (error) {
-            setError('Error')
+            setError('Something went wrong. Please try again.')
         }
         
         setLoading(false)

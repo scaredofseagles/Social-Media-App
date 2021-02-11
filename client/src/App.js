@@ -7,34 +7,41 @@ import Footer from './components/Footer'
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import UserProfile from "./views/UserProfile"
 import Login from './views/Login'
+import Signup from './views/Signup'
+import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   return (
     <>
-      <Navbar/>
+      {/* <AuthProvider> */}
+        <Navbar/>        
+          <Router>
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/signup">
+                <Signup />
+              </Route>
+              <Container className="mb-4">
+              <Route path="/home">
+                <NewText updateData={() => setIsSubmitted(!isSubmitted) }/>
+                <AllPosts isSubmitted={isSubmitted}/>
+              </Route>
+              <Route path="/users/:userid">
+                <UserProfile />
+              </Route>
+              <Route path="/admin">
+                
+              </Route>
+              </Container>
+            </Switch>
+          </Router>       
+        <Footer/>
+      {/* </AuthProvider> */}
       
-        <Router>
-          <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Container className="mb-4">
-            <Route path="/home">
-              <NewText updateData={() => setIsSubmitted(!isSubmitted) }/>
-              <AllPosts isSubmitted={isSubmitted}/>
-            </Route>
-            <Route path="/users/:userid">
-              <UserProfile />
-            </Route>
-            <Route path="/admin">
-              
-            </Route>
-            </Container>
-          </Switch>
-        </Router>       
-      <Footer/>
     </>
     
   );

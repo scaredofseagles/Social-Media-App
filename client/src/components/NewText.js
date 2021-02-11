@@ -28,12 +28,14 @@ export default function NewText(props){
     async function handleFormSubmit(event) {
         event.preventDefault();
 
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'))
+
         let parsedtags = textValue.match(/(^|\s)(#[a-z\d-]+)/ig)
 
         let trimmedtext = textValue.replace(/(^|\s)(#[a-z\d-]+)/ig, '')
 
         const postData = {
-            user_id: '29dad17a-d056-45a1-9184-91f03fa862ae',
+            user_id: currentUser.id,
             tweet: trimmedtext,
             tags: parsedtags
         }

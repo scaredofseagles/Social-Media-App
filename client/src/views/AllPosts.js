@@ -11,7 +11,6 @@ export default function AllPosts(props) {
 
     async function getAllPosts() {
         let result = await API.getPosts()
-        console.log(result.data.response)
         if (result.data.success) {
             setPostData(result.data.response)
         } else {
@@ -22,7 +21,6 @@ export default function AllPosts(props) {
     return(
         <main style={{ overflowY: 'auto' }}>
             { postData.length >= 1 ? postData.map(post => {
-                console.log({post})
                 return <TextCard data={ post }/>
             }) : <p>i'll put a spinner here</p>}
             

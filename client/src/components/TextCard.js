@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 export default function TextCard(props){
     const classes = useStyles()
     const bull = <span className={classes.bullet}>.</span>
-    console.log({props})
+
     return(
         <Card className={classes.root} variant="outlined" style={{marginTop: "20px"}}>
             <Grid container >
@@ -60,10 +60,19 @@ export default function TextCard(props){
                         </Typography>
                         <br />
                         <Typography className={classes.title} color="textSecondary">
-                        tags: 
-                            <a href="/"> #lorem,</a>
-                            <a href="/"> #ipsum,</a>
-                            <a href="/"> #dolor,</a>
+                            tags: 
+                            {props.data.tags ?
+                                props.data?.tags.map(tag => {
+                                    return <>
+                                        <a href={`/?tags=${tag}`}> {tag},</a>
+                                    </>
+                                }) : 
+                                
+                             <>    
+                            <a href="/?tags=#lorem"> #lorem,</a>
+                            <a href="/?tags=#ipsum"> #ipsum,</a>
+                            <a href="/?tags=#dolor"> #dolor,</a>
+                            </>}
                         </Typography>
                     </CardContent>
                 </Grid>

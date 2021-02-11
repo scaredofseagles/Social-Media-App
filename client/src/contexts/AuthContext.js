@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect, createContext } from 'react'
+import API from '../utils/API'
 
 const AuthContext = createContext()
 
@@ -10,7 +11,13 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
 
-    function signup(screen_name, email, profile_image) { }
+    async function signup(newUser) {
+
+        let result = await API.addUser(newUser)
+        debugger
+        setCurrentUser(newUser)
+        return result
+    }
     
     function login(screen_name) { }
     
@@ -30,7 +37,7 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     )
 }
