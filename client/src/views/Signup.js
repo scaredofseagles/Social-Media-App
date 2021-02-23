@@ -75,7 +75,6 @@ export default function Signup() {
             setLoading(true)
 
             let result = await API.addUser(newUserData)           
-            //debugger
             if (result.data.success) {
                 localStorage.setItem('currentUser', JSON.stringify(result.data.response))
                 history.push("/home")
@@ -90,6 +89,13 @@ export default function Signup() {
         setLoading(false)
     }
 
+    function handleEnter(event){
+        if (event.keyCode === 13) {
+            event.preventDefault(); 
+            setShowNext(!showNext);
+        }
+    }
+
     return (
         <Body>
             <SignupContainer>
@@ -98,7 +104,7 @@ export default function Signup() {
                         <Card.Body>
                             <h2>Sign Up</h2>
                             {error && <Alert variant="danger">{error}</Alert>}
-                            <Form onSubmit={handleFormSubmit}>
+                            <Form onSubmit={handleFormSubmit} onKeyPress={(event) => handleEnter(event)}>
                                 <Form.Group as={Row}>
                                     
                                     <Form.Control ref={emailRef} placeholder="Enter your email here" type="email" required/>

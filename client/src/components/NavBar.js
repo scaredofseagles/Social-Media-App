@@ -10,11 +10,9 @@ export default function NavBar() {
 
   const anchorRef = useRef(null);
 
-  const history = useHistory();
-
   useEffect(() => {
     checkUser()
-  }, [history])
+  }, [])
 
   function handleClose() {
     setOpen(false)
@@ -42,14 +40,13 @@ export default function NavBar() {
           Signed in as: {user}<IconButton ref={anchorRef} onClick={() => setOpen(!open)}> <GoTriangleDown /></IconButton>
         </Navbar.Text>
           : <Navbar.Text>Not Signed In</Navbar.Text>}
-        <Menu open={open} handleClose={handleClose} anchorRef={anchorRef} history={history}/>
+        <Menu open={open} handleClose={handleClose} anchorRef={anchorRef} user={user}/>
       </Navbar.Collapse>
     </Navbar>
   );
 }
 
 function Menu(props) {
-  const history = useHistory();
 
   const handleClose = (event) => {
     if (props.anchorRef.current && props.anchorRef.current.contains(event.target)) {
@@ -78,9 +75,9 @@ function Menu(props) {
               <Paper className="yellow">
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList autoFocusItem={props.open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={() => window.location.replace("/users/" + JSON.parse(localStorage.getItem('currentUser')).id)}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={() => { localStorage.clear('currentUser'); history.push("/login"); }}>Logout</MenuItem>
+                  <MenuItem onClick={() => { localStorage.clear('currentUser'); window.location.replace("/login"); }}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

@@ -1,6 +1,7 @@
 import TextCard from "../components/TextCard";
 import { useEffect, useState } from 'react'
 import API from '../utils/API'
+import { Spinner } from "../styles";
 
 export default function AllPosts(props) {
     const [postData, setPostData] = useState([])
@@ -20,9 +21,9 @@ export default function AllPosts(props) {
 
     return(
         <main style={{ overflowY: 'auto' }}>
-            { postData.length >= 1 ? postData.map(post => {
-                return <TextCard data={ post }/>
-            }) : <p>i'll put a spinner here</p>}
+            { postData.length >= 1 ? postData.map((post, idx) => {
+                return <TextCard data={ post } key={idx}/>
+            }) : <Spinner top={55} left={55} height="300px" opacity={0}/>}
             
         </main>
     )

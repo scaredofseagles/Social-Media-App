@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import UserProfile from "./views/UserProfile"
 import Login from './views/Login'
 import Signup from './views/Signup'
+import TagSearch from './views/TagSearch'
 import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
@@ -26,16 +27,19 @@ function App() {
                 <Signup />
               </Route>
               <Container className="mb-4">
-              <Route path="/home">
-                <NewText updateData={() => setIsSubmitted(!isSubmitted) }/>
-                <AllPosts isSubmitted={isSubmitted}/>
-              </Route>
-              <Route path="/users/:userid">
-                <UserProfile />
-              </Route>
-              <Route path="/admin">
-                
-              </Route>
+                <Route path="/home">
+                  <NewText updateData={() => setIsSubmitted(!isSubmitted) }/>
+                  <AllPosts isSubmitted={isSubmitted}/>
+                </Route>
+                <Route path="/users/:userid">
+                  <UserProfile />
+                </Route>
+                <Route path="/admin">
+                  
+                </Route>
+                <Route path="/tags">
+                  <TagSearch />
+                </Route>
               </Container>
             </Switch>
           </Router>       

@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import moment from 'moment'
-import momentDurationFormatSetup from 'moment-duration-format'
+import Moment from 'react-moment'
 import {
   Card,
   CardActions,
@@ -53,25 +52,26 @@ export default function TextCard(props){
                 <Grid item xs={8}>
                     <CardContent>
                         <Typography className={classes.pos} color="textSecondary" gutterBottom>
-                            {props.data?.screen_name} {bull} {moment.duration(props.data?.created_at, "days").format("d") === "0" ? "Today" : moment.duration(props.data?.created_at, "days").format( "d [days ago]") }
+                            {/* TODO: create a function for duration since */}
+                            {props.data.screen_name} {bull} <Moment format="MMMM Do YYYY HH:mm">{props.data.created_at}</Moment>
                         </Typography>
                         <Typography variant="body2" component="p">
-                            { props.data?.tweet }
+                            { props.data.tweet }
                         </Typography>
                         <br />
                         <Typography className={classes.title} color="textSecondary">
                             tags: 
                             {props.data.tags ?
-                                props.data?.tags.map(tag => {
-                                    return <>
+                                props.data.tags.map(tag => {
+                                    return <span key={tag}>
                                         <a href={`/?tags=${tag}`}> {tag},</a>
-                                    </>
+                                    </span>
                                 }) : 
                                 
                              <>    
-                            <a href="/?tags=#lorem"> #lorem,</a>
-                            <a href="/?tags=#ipsum"> #ipsum,</a>
-                            <a href="/?tags=#dolor"> #dolor,</a>
+                            <a href="/tags=#lorem"> #lorem,</a>
+                            <a href="/tags=#ipsum"> #ipsum,</a>
+                            <a href="/tags=#dolor"> #dolor,</a>
                             </>}
                         </Typography>
                     </CardContent>

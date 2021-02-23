@@ -13,6 +13,9 @@ const API = {
     getPosts: async () => {
         return await axios.get("/api/posts")
     },
+    getUserPosts: async (id) =>{
+        return await axios.get("/api/posts/" + id)
+    },
     getScreenName: async () => {
         return await axios.get("https://random-word-api.herokuapp.com/word?number=2")
     },
@@ -21,6 +24,9 @@ const API = {
     },
     addUser: async (data) => {
         return await axios.post("/api/users", data)
+    },
+    getTags: async (tag) => {
+        return await axios.get("/api/posts/byTag/" + tag)
     }
 }
 

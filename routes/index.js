@@ -1,4 +1,4 @@
-const db = require('../config')
+//const db = require('../config')
 const pool = require("../db");
 
 function Router(app){
@@ -14,8 +14,16 @@ function Router(app){
     })
 
     app.get("/api/posts/:userid", async (req, res) => {
-        const user_id = req.params.userid
-        let result = await db.query(`SELECT * FROM tweets WHERE user_id = ${user_id}`)
+        const user_id = req.params.userid;
+
+        let result = await db.query(`SELECT * FROM tweets WHERE user_id = ${user_id} ORDER BY created_at DESC`);
+        res.json(result);
+    })
+
+    app.get("/api/posts/byTag/:tag", async (req, res) => {
+        const tag = req.params.tag;
+
+        let result = await db.query(`SELECT * FROM tweets WHERE tags = ${tag}`)
         res.json(result)
     })
 
@@ -26,6 +34,7 @@ function Router(app){
                 FROM tweets 
                     LEFT JOIN users ON user_id = users.id
                 WHERE active = true
+                ORDER BY tweets.created_at DESC
             `);
             res.json({success: true, msg: "Retrieved Posts Successfully", response: result.rows});
         } catch (error) {
@@ -102,6 +111,7 @@ function Router(app){
     app.put("/api/users", async (req, res) => {
         
     })
+
 }
 
 module.exports = Router

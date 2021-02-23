@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import styled from 'styled-components'
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { Button } from '@material-ui/core';
-import { Tabs, Tab } from 'react-bootstrap'
+import { Tabs, Tab } from 'react-bootstrap';
+import API from '../utils/API';
 
 const UserContainer = styled.section`
     //display: flex;
@@ -33,14 +34,25 @@ const Actionables = styled.aside`
 export default function UserProfile() {
     
     const [key, setKey] = useState('home')
+    const [user, setUser] = useState({})
+
+    useEffect(()=>{
+        setUser(JSON.parse(localStorage.getItem('currentUser')))
+        getPosts()
+    }, [])
+
+    async function getPosts(){
+        let result = await API.getUserPosts(user.id);
+        debugger
+    }
 
     return (
         <>
             <UserContainer>
-                <h1>Welcome, User</h1>
+                <h2>Welcome, {user.screen_name}</h2>
                 <div style={{display: 'flex'}}>
                     <Actionables>
-                        <ProfileImage image="https://robohash.org/65.60.11.210.png" />
+                        <ProfileImage image={user.profile_image} />
                         <div>
                             <h6>Some Stats (interations)</h6>
                             <ul>

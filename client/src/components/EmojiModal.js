@@ -43,9 +43,9 @@ export default function EmojiModal(props) {
 
       <GridList cellHeight={50} cols={4}>
         {!loading ? (
-          emoji.map((icon) => {
+          emoji.map((icon, idx) => {
             return (
-              <GridListTile cols={icon.cols || 1}>
+              <GridListTile cols={icon.cols || 1} key={idx}>
                 <GridListTileBar
                   title={icon.character}
                   onClick={() => console.log(`${icon.slug} has been clicked`)}
