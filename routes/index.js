@@ -16,14 +16,14 @@ function Router(app){
     app.get("/api/posts/:userid", async (req, res) => {
         const user_id = req.params.userid;
 
-        let result = await db.query(`SELECT * FROM tweets WHERE user_id = ${user_id} ORDER BY created_at DESC`);
+        let result = await pool.query(`SELECT * FROM tweets WHERE user_id = ${user_id} ORDER BY created_at DESC`);
         res.json(result);
     })
 
     app.get("/api/posts/byTag/:tag", async (req, res) => {
         const tag = req.params.tag;
 
-        let result = await db.query(`SELECT * FROM tweets WHERE tags = ${tag}`)
+        let result = await pool.query(`SELECT * FROM tweets WHERE tags = ${tag}`)
         res.json(result)
     })
 
