@@ -1,151 +1,192 @@
-import { Card, Form, Button, Alert, Row, Col } from 'react-bootstrap'
-import styled from 'styled-components'
-import { Link, useHistory } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react';
-import API from '../utils/API'
-import { useAuth } from '../contexts/AuthContext';
+import { Link, useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import API from "../utils/API";
+import {
+  Box,
+  Input,
+  Heading,
+  Center,
+  Stack,
+  HStack,
+  Text,
+  Alert,
+  AlertIcon,
+  Link as ReachLink,
+  Button,
+  Image
+} from "@chakra-ui/react";
+import useStore from "../utils/store";
 
-const SignupContainer = styled.div`
-    display: flex;
-    margin-right: 0px !important;
-    padding: 0px;
-    max-width: 1140px;
-    box-sizing: border-box;
-    background-color: #FFBC42;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    css-selector;
-`;
-const Body = styled.body`
-    background-color: #FFBC42;
-    padding-bottom: 4em;
-`;
-
-const ProfileImage = styled.img`
-    background-image: url(${props => props.image});
-    margin: 5px;
-    margin-right: 30px;
-    width: 200px;
-    height: 200px;
-    // /* object-fit: cover;
-    // object-position: center; */
-    background-position: top left;
-    background-size: cover;
-    float:left;
-`;
+const initalValues = {
+  email: "",
+  image: "",
+  name: ""
+};
 
 export default function Signup() {
+  const { setCurrentUser } = useStore();
 
-    const [showNext, setShowNext] = useState(false)
-    const [nameValue, setNameValue] = useState('')
-    const [profileValue, setProfileValue] = useState('')
-    const [loading, setLoading] = useState(false)   
-    const [error, setError] = useState('')
+  const [showNext, setShowNext] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  const [profileValue, setProfileValue] = useState("");
 
-    //const  signup  = useAuth()
+  const [formValues, setFormValues] = useState(initalValues);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const emailRef = useRef()
+  const history = useHistory();
 
-    const history = useHistory()
+  useEffect(() => {
+    getDefaultName();
+  }, []);
 
-    useEffect(() => {
-        //getDefaultName()
-        console.log(emailRef.current.value)
-    }, [])
+  const handleInputChange = e => {
+    const { name, value } = e.target;
 
-    async function getDefaultName() {
-        let nameResult = await API.getScreenName()
-        let imageResult = await API.getProfile(nameResult.data.join('-'))
-        setNameValue(nameResult.data.join('-'))       
-        setProfileValue(imageResult.config.url)
+    setFormValues({
+      ...formValues,
+      [name]: value
+    });
+  };
+
+  const handleNext = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+    if (formValues.email === "") setError("Must enter an email");
+    else if (!emailRegex.test(formValues.email)) setError("Email is not valid");
+    else {
+      setShowNext(!showNext);
+      setError("");
     }
+  };
 
+  async function getDefaultName() {
+    let nameResult = await API.getScreenName();
+    let imageResult = await API.getProfile(nameResult.data.join("-"));
+    setNameValue(nameResult.data.join("-"));
+    setProfileValue(imageResult.config.url);
+  }
 
-    async function handleFormSubmit(event) {
-        event.preventDefault();
+  const handleFormSubmit = async event => {
+    event.preventDefault();
 
-        const newUserData = {
-            screen_name: nameValue,
-            email: emailRef.current.value,
-            profile_image: profileValue
-        }
+    const newUserData = {
+      screen_name: nameValue,
+      email: formValues.email,
+      profile_image: profileValue
+    };
 
-        try {
-            setLoading(true)
+    try {
+      setLoading(true);
 
-            let result = await API.addUser(newUserData)           
-            if (result.data.success) {
-                localStorage.setItem('currentUser', JSON.stringify(result.data.response))
-                history.push("/home")
-            } else if (!result.data.success) {
-                setError(result.data.msg)
-            }
+      let result = await API.addUser(newUserData);
 
-        } catch (error) {
-            setError('Something went wrong. Please try again.')
-            console.error(error)
-        }
-        setLoading(false)
+      if (result.data.success) {
+        setCurrentUser(result.data.response);
+        history.push("/home");
+      }
+      setError(result.data.msg);
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+      console.error(error);
     }
+    setLoading(false);
+  };
 
-    function handleEnter(event){
-        if (event.keyCode === 13) {
-            event.preventDefault(); 
-            setShowNext(!showNext);
-        }
+  function handleEnter(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      setShowNext(!showNext);
     }
+  }
 
-    return (
-        <Body>
-            <SignupContainer>
-                <div className="w-100" style={{maxWidth: "600px", margin: "auto"}}>
-                    <Card style={{padding: "0px 10px"}}>
-                        <Card.Body>
-                            <h2>Sign Up</h2>
-                            {error && <Alert variant="danger">{error}</Alert>}
-                            <Form onSubmit={handleFormSubmit} onKeyPress={(event) => handleEnter(event)}>
-                                <Form.Group as={Row}>
-                                    
-                                    <Form.Control ref={emailRef} placeholder="Enter your email here" type="email" required/>
-                                    <Button onClick={() => setShowNext(!showNext)} disabled={emailRef.current?.value} style={{marginTop: "2%", float: "right"}} type="button">Continue</Button>
-                                </Form.Group>
+  return (
+    <>
+      <Center mt="auto" mb="auto" h="70vh">
+        <Stack>
+          <Box
+            borderWidth="2px"
+            borderColor="gray.500"
+            borderRadius="7px"
+            w="500px"
+            minheight="360px"
+            mt="3em"
+            mb=".5em"
+            p="1.5em"
+          >
+            <Center>
+              <Heading>Sign Up</Heading>
+            </Center>
 
+            <Input
+              my="1em"
+              name="email"
+              value={formValues.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email here"
+            />
 
-                                {showNext ? <>
+            <Button
+              onClick={handleNext}
+              bg="#071330"
+              _hover={{ bg: "#0a1c47" }}
+              isDisabled={showNext}
+            >
+              Continue
+            </Button>
 
-                                <Col sm={10}>
-                                    <Form.Group>                                    
-                                        <ProfileImage image={profileValue}/>                              
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group as={Row}>
-                                        <Form.Label>Screen Name</Form.Label>
-                                        <Form.Control value={nameValue} readOnly />
-                                        <Button onClick={getDefaultName} type="button" style={{marginTop: "2%"}}>Generate</Button>
-                                    </Form.Group>
-                                
-                                </Col>
-                                
-                                <div style={{marginTop: "5%"}}>
-                                    <Button type="submit" className="w-100" disabled={loading}>Submit</Button>
-                                </div>
-                                 </>   
-                                : <></>}
-                                
-                            </Form>
-                        </Card.Body>
-                    
-                    </Card>
-                    <div className="w-100 text-center mt-2">
-                        Already have an account? <Link to="/login">Log In</Link>
-                    </div>
-                </div>
-                
-                
-            </SignupContainer>
-        </Body>
-        
-    )
+            {showNext ? (
+              <>
+                <HStack my="1.5em">
+                  <Image
+                    boxSize="200px"
+                    src={profileValue}
+                    borderWidth="1px"
+                    borderColor="gray"
+                  />
+
+                  <Stack>
+                    <Text>Screen Name:</Text>
+                    <Input value={nameValue} isReadOnly />
+                    <Button
+                      bg="#C3CEDA"
+                      color="#071330"
+                      _hover={{ bg: "gray.400" }}
+                      onClick={getDefaultName}
+                    >
+                      Re-Generate
+                    </Button>
+                  </Stack>
+                </HStack>
+
+                <Button
+                  bg="#071330"
+                  _hover={{ bg: "#0a1c47" }}
+                  isDisabled={loading}
+                  onClick={handleFormSubmit}
+                >
+                  Submit
+                </Button>
+              </>
+            ) : null}
+
+            {error && (
+              <Alert mt="1.5em" status="error" color="black">
+                <AlertIcon />
+                {error}
+              </Alert>
+            )}
+          </Box>
+          <Center>
+            <Text>
+              Already have an account?{" "}
+              <ReachLink as={Link} to="/login" color="yellow.400">
+                Log In
+              </ReachLink>
+            </Text>
+          </Center>
+        </Stack>
+      </Center>
+    </>
+  );
 }

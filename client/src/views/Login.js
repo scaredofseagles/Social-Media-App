@@ -1,75 +1,104 @@
-import { Card, Form, Button, Alert } from 'react-bootstrap'
-import styled from 'styled-components'
-import { Link, useHistory } from 'react-router-dom'
-import { useRef, useState } from 'react';
-import API from '../utils/API'
+import { Link, useHistory } from "react-router-dom";
+import { useState } from "react";
 
-const LoginContainer = styled.div`
-    display: block;
-    margin: 0px 173px;
-    padding: 0px 173px;
-    max-width: 1140px;
-    box-sizing: border-box;
-    background-color: #FFBC42;
-    height: 68vh;
-`;
-const Body = styled.body`
-    background-color: #FFBC42;
-    padding-bottom: 4em;
-`;
+import {
+  Box,
+  Input,
+  Heading,
+  Center,
+  Stack,
+  Text,
+  Alert,
+  AlertIcon,
+  Link as ReachLink,
+  Button
+} from "@chakra-ui/react";
+import API from "../utils/API";
+import useStore from "../utils/store";
 
 export default function Login() {
-    const [loading, setLoading] = useState(false)   
-    const [error, setError] = useState('')
-    const screen_nameRef = useRef()
+  const [formValues, setFormValues] = useState({ email: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const history = useHistory()
+  const { setCurrentUser } = useStore();
+  const history = useHistory();
 
-    async function handleFormSubmit(event) {
-        event.preventDefault();
-        let result = await API.getUsers()
-        debugger
-        try {
-            let validUser = result.data.response.filter(user => user.screen_name === screen_nameRef.current.value)
-            setLoading(true)
-            debugger
-            if (validUser.length >= 1) {
-                localStorage.setItem('currentUser', JSON.stringify(validUser[0]))
-                history.push("/home")
-            } else {
-                setError('User does not exist')
-            }
-        } catch (error) {
-            setError('Something went wrong. Please try again.')
-        }
-        
-        setLoading(false)
-        
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value
+    });
+  };
+
+  const handleFormSubmit = async event => {
+    if (formValues.email === "") setError("Must provide email");
+    else {
+      setLoading(true);
+      let result = await API.authorize(formValues.email);
+      setLoading(false);
+      if (result.data.success) {
+        setCurrentUser(result.data.response);
+        history.push("/home");
+      } else setError("User does not exist");
     }
+  };
 
-    return (
-        <Body>
-            <LoginContainer>
-                <Card>
-                    <Card.Body>
-                        <h2>Log In</h2>
-                        {error && <Alert variant="danger">{error}</Alert>}
-                        <Form onSubmit={handleFormSubmit}>
-                            <Form.Label>Screen Name:</Form.Label>
-                            <Form.Control ref={screen_nameRef} placeholder="Enter your screen name here" required/>
-                            <small><Link to="/forgot">Forgot your screen name?</Link></small>
-                            <div style={{marginTop: "3%"}}>
-                                <Button type="submit" disabled={loading}>Submit</Button>
-                            </div>
-                            
-                        </Form>
-                    </Card.Body>
-                </Card>
-                <div className="w-100 text-center mt-2">
-                    Don't have an account? <Link to="/signup">Sign up</Link>
-                </div>
-            </LoginContainer>
-        </Body>
-        
-    )
+  return (
+    <>
+      <Center mt="auto" mb="auto" min-height="70vh">
+        <Stack>
+          <Box
+            borderWidth="2px"
+            borderColor="gray.500"
+            borderRadius="7px"
+            w="500px"
+            minheight="360px"
+            mt="3em"
+            mb=".5em"
+            p="1.5em"
+          >
+            <Center>
+              <Heading>Log In</Heading>
+            </Center>
+
+            <Text>Email: </Text>
+            <Input
+              my="1em"
+              onChange={handleInputChange}
+              name="email"
+              value={formValues.email}
+              placeholder="Enter email here"
+              isRequired
+            />
+
+            {error && (
+              <Alert status="danger">
+                <AlertIcon />
+                {error}
+              </Alert>
+            )}
+
+            <Button
+              bg="#071330"
+              _hover={{ bg: "#0a1c47" }}
+              isDisabled={loading}
+              onClick={handleFormSubmit}
+            >
+              Submit
+            </Button>
+          </Box>
+          <Center>
+            <Text color="yellow.400">
+              Don't have an account?{" "}
+              <ReachLink as={Link} to="/signup">
+                Sign Up
+              </ReachLink>
+            </Text>
+          </Center>
+        </Stack>
+      </Center>
+    </>
+  );
 }

@@ -1,0 +1,25 @@
+body {
+  background-color: #0c4160 !important;
+  color: #c3ceda !important;
+}
+
+a {
+  text-decoration: none;
+  color: inherit !important;
+}
+
+li {
+  list-style-type: none;
+}
+
+/* .yellow {
+  background-color: #ffbc42;
+}
+
+.lightblue {
+  background-color: #0496ff;
+} */
+
+.fas:hover {
+  background-color: lightgrey;
+}
