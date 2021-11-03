@@ -3,7 +3,7 @@ const db = require("../db/db");
 exports.authorize = async (req, res) => {
   const { email } = req.params;
   try {
-    const userQuery = await pool.query(
+    const userQuery = await db.query(
       `SELECT * FROM users WHERE email = '${email}'`
     );
 
@@ -39,7 +39,7 @@ exports.getUsers = async (req, res) => {
 exports.addUser = async (req, res) => {
   const { screen_name, email, profile_image } = req.body;
 
-  // const client = await pool.connect();
+  // const client = await db.connect();
 
   try {
     // await client.query("BEGIN");

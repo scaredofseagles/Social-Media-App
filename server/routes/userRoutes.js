@@ -5,8 +5,8 @@ const { check4Duplicates } = require("../middleware");
 router.route("/authorize/:email").get(userControllers.authorize);
 
 router
-  .router("/")
+  .route("/", check4Duplicates)
   .get(userControllers.getUsers)
-  .post(check4Duplicates, userControllers.addUser);
+  .post(userControllers.addUser);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const db = require("../db/db");
 
 exports.getPosts = async (req, res) => {
   try {
-    const result = await pool.query(`
+    const result = await db.query(`
             SELECT user_id, screen_name, profile_image, posts.created_at, post, tags
             FROM posts
                 LEFT JOIN users ON user_id = users.id
@@ -27,7 +27,7 @@ exports.getPosts = async (req, res) => {
 exports.getUserPosts = async (req, res) => {
   const user_id = req.params.userid;
 
-  let result = await pool.query(
+  let result = await db.query(
     `SELECT * FROM posts WHERE user_id = ${user_id} ORDER BY created_at DESC`
   );
   res.json(result);
@@ -37,7 +37,7 @@ exports.addPost = async (req, res) => {
   const { user_id, post, tags } = req.body;
 
   (async () => {
-    const client = await pool.connect();
+    const client = await db.connect();
 
     try {
       await client.query("BEGIN");
@@ -67,6 +67,6 @@ exports.addPost = async (req, res) => {
 exports.getTags = async (req, res) => {
   const tag = req.params.tag;
 
-  let result = await pool.query(`SELECT * FROM posts WHERE tags = ${tag}`);
+  let result = await db.query(`SELECT * FROM posts WHERE tags = ${tag}`);
   res.json(result);
 };
